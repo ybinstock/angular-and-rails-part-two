@@ -216,15 +216,17 @@ Catch up:
 
 	git checkout two
 
-####4) Wrapping a 3rd party API in a factory
+####3) Create controllers and factory with dummy data and test
 
 **Exercise:**
  
 * Create `MovieController` and `MoviesController` and test with dummy $scope variable in corresponding pages.
-* Create a factory called 'YouTube' that has a function returning the string "Jaws". Use new factory in MoviesController to set your dummy scoped variable to the return value of the function.
+* Create a `YouTube` factory that has a function returning the string "Jaws". Use new factory in MoviesController to set your dummy scoped variable to the return value of the function.
 * Add a link to the bottom of the home page that goes to the movies page.  
 
+Catch up:
 
+	git checkout three
 
 
 ####5) Make raffler app talk to "players api"
