@@ -1,0 +1,20 @@
+
+
+<h1>Southpark Raffle</h1>
+
+<div ng-controller="RaffleController">
+
+  <form ng-submit="addPlayer()">
+    <input type="text" ng-model="newName">
+    <input type="submit" value="Add">
+  </form>
+
+  <ul>
+    <li ng-repeat="player in players">
+      {{player.name}}
+       <span ng-show="player.winner" ng-class="{highlight: player == lastWinner}" class="winner">WINNER</span>
+    </li>
+  </ul>
+
+   <button ng-click="drawWinner()">Draw Winner</button>
+</div>
