@@ -1,1 +1,9 @@
-{{ testTrailer }}
+ <div class="row">
+    <div ng-repeat="movie in movies" class="col-md-4 col-sm-6 col-xs-12">
+        <a href="/movie/{{movie.youtubeId}}">
+          <div class="title">
+            {{movie.title}}
+          </div> <!-- end "title"-->
+        </a>
+    </div> <!-- end movie -->
+</div>

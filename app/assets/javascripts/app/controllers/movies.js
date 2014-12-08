@@ -1,8 +1,11 @@
 angular.module('raffler.controllers')
 	.controller('MoviesController', [
 	"$scope",
-	function($scope) {
+	"YouTube",
+	function($scope, YouTube) {
 		
-		$scope.testTrailer = "Jaws trailer";
+		YouTube.getTop25Movies().then(function(result){
+			$scope.movies = result;
+		});
 
 	}]);
