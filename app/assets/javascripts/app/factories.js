@@ -15,10 +15,12 @@
 //
 // Make sure to inject 'Player' where needed.
 
-app.factory('Player',
+angular.module('raffler.factories')
+	.factory('Player',
 	function (railsResourceFactory) {
 		var resource = railsResourceFactory({
 			url: '/players',
 			name: 'player'});
 		return resource;
 });
+
