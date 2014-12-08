@@ -31,7 +31,7 @@ app.config(function($routeProvider, $locationProvider) {
       })
     .when('/movies',
       {
-        controller: 'RaffleController',
+        controller: 'MoviesController',
         templateUrl: '/templates/movies.html'
       })
     .otherwise({redirectTo: '/'});
