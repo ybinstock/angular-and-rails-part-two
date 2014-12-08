@@ -357,27 +357,104 @@ angular.module('raffler.controllers')
 	
 **Exercise:** Repeat over movies and display titles as link to movie page.
 
+Catch up:
+
+	git checkout four
 	
+		
+####5) Creating the movie page
 
+Here's a bare bones moviue template:
 
-
-
-
-
-
-
-	
-
-####6) POSTing from Angular - Adding players
-
-	
-
-
+```
+<div class="row">
+    <div class="col-xs-12">
+    <h2>{{movie.title}}</h2> 
+   	<iframe width="853" height="480" ng-src="{{movie.youtubeUrl}}" frameborder="0" allowfullscreen></iframe> 
+    </div>
+  </div>
+```
+We are going to shoew the trailer in a an [iframe](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=what%20is%20an%20iframe)  
   
-  
+Now if we click on a movie we can visit the movie template. It doesn't work! That's because we haven't filled out the controller yet.
 
-	
-	
+First thing we need to do is pull out the list of movies from our movie service, like before.
+
+```
+YouTube.getTop25Movies().then(function(result){
+	$scope.movies = result;
+});
+```		
 
 
- 
+But we don't need all the movies on this page. We only need the one specific movie. But how do we know which movie we need to load?
+
+We need to use Angular's $routeParams service. Inject in MovieController.
+
+```
+...
+.controller('MoviesController', [
+	"$scope",
+	"$routeParams"
+	"YouTube",
+	function($scope, $routeParams, YouTube) {
+		
+...
+```
+
+Then you can get to URL params like this (console.log routeParams!):
+
+	$routeParams.movie_id; 
+
+The parameter name needs to match the name in the router config.
+
+So the new MovieControlle looks like this:
+
+```
+angular.module('raffler.controllers')
+	.controller('MovieController', [ 
+	"$scope",
+	"$routeParams",
+	"$sce",
+	"YouTube",
+	function($scope, $routeParams, $sce, YouTube) {
+    console.log($routeParams);
+
+		YouTube.getTop25Movies().then(function(result){
+			var movies = result;
+			console.log(result);
+			$scope.movie = _.find(movies, function(v){ 
+				return v.youtubeId == $routeParams.movie_id; 
+			});
+    	
+    	$scope.movie.youtubeUrl = "http://www.youtube.com/embed/" + $scope.movie.youtubeId + "?rel=0"
+  		
+  	});
+
+	}]);
+```
+
+**STOP:** The code is using underscore's find function. You need to install underscore gem and require underscore in `application.js` - run bundle and restart rails.
+
+Now refresh the page. Hmm it isn't loading? Why is that? Let's view dev tools. See the error.
+
+
+```
+Error: [$interpolate:interr] Can't interpolate: {{movie.youtubeUrl}}
+Error: [$sce:insecurl] Blocked loading resource from url not allowed by $sceDelegate policy. 
+```
+
+$sce is a service that provides some security features to AngularJS. SCE stands for Strict Contextual Escaping.
+
+Basically, SCE helps you write code that (a) is secure by default and (b) makes auditing for security vulnerabilities such as XSS, clickjacking, etc. a lot easier.
+
+So what we need to do is to tell angular that we trust this YouTube embed URL as a trusted resource URL. To do that we use the $sce service.
+
+First, we have to inject $sce into our dependencies.
+
+Second, we tell $sce to trust our YouTube URL.
+
+```
+$scope.movie.youtubeUrl = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + 
+$scope.movie.youtubeId + "?rel=0"); 
+```

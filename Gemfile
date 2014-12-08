@@ -17,6 +17,7 @@ gem 'coffee-rails', '~> 4.0.0'
 gem 'pry-rails'
 gem 'angularjs-rails-resource', '~> 1.1.1'
 gem 'angular-gem'
+gem 'underscore-rails'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

@@ -43,7 +43,6 @@ angular.module('raffler.factories')
 	            title: movie["media$group"]["media$title"]["$t"],
 	          };
 	        });
-	        console.log(movies);
 	        d.resolve(movies);
 	      });
 	    return d.promise;
