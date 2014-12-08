@@ -27,8 +27,8 @@ angular.module('raffler.factories')
 angular.module('raffler.factories')
 	.factory('YouTube', function ($http, $q) {
 		var api = {};
-		api.dummyMovie = function (){
-			return "Jaws";
-		}
+		api.testFunction = function() { 
+			return "Jaws from a function in YouTube factory"; 
+		};
 		return api;
 });
