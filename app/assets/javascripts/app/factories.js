@@ -22,3 +22,4 @@ app.factory('Player',
 			name: 'player'});
 		return resource;
 });
+
