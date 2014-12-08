@@ -12,4 +12,5 @@
 //
 //= require angular
 //= require angularjs/rails/resource
+//= require app/app
 //= require_tree .
