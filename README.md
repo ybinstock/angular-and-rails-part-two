@@ -1,5 +1,5 @@
 
-##AngularJS and Rails - Part 2
+##AngularJS and Rails - Part 2 - in five steps
 
 ####Goals:
 
@@ -7,10 +7,10 @@
 * Extend Raffler app from last week
 * Refactor app as it grows
 * Add more pages, controllers, factories
-* Understand Angular routing
+* Understand Angular routing and links
 * Integrate external APIs
 
-Quick overview of what we are going to build.
+Let's start with a quick overview of what we are going to build.
 
 ####1) Getting started - same as last time:
 
@@ -23,7 +23,6 @@ Clone [this repo](https://github.com/wdi-sf-fall/angular-and-rails-part-two) and
 	rails s
 
 [open app in browser](http://localhost:3000)
-
 
 ####1) Refactoring
 
@@ -204,7 +203,7 @@ That's better, the real page shows up again. What about '/movies'?
 
 No luck. Our router isn't sticking. Why is that happening?
 
-It's because in our routes we're using HTML5 mode, but when we send a request to /movies Rails is trying to handle a request to that page and it can't find the page.
+It's because in our routes we're using HTML5 mode, but when we send a request to `/movies` Rails is trying to handle a request to that page and it can't find the page.
 
 If we want to use the Angular router, we have to tell Rails to send missing URLs to us. This needs to be the very last route
 
@@ -288,7 +287,7 @@ var promise = $http({
 });
 ```
 
-And the controller resolves the promise:
+And the controller wakes up upon fulfillment of the promise:
 
 ```
 promise.then(function(obj) {
@@ -362,27 +361,103 @@ Catch up:
 	git checkout four
 	
 		
-####5) Calling external APIs - Dynamically Loading Movies
+####5) Creating the movie page
+
+Here's a bare bones movie template:
 
 
 
+	<div class="row">
+    	<div class="col-xs-12">
+    	<h2>{{movie.title}}</h2> 
+   		<iframe width="853" height="480" ng-src="{{movie.youtubeUrl}}" frameborder="0" 	allowfullscreen></iframe> 
+    	</div>
+	</div>
 
-
-
-
-
-	
-
-####6) POSTing from Angular - Adding players
-
-	
-
-
+We are going to shoew the trailer in a an [iframe](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=what%20is%20an%20iframe)  
   
-  
+Now if we click on a movie we can visit the movie template. It doesn't work! That's because we haven't filled out the controller yet.
 
-	
-	
+First thing we need to do is pull out the list of movies from our movie service, like before.
 
 
- 
+```
+YouTube.getTop25Movies().then(function(result){
+	$scope.movies = result;
+});
+```		
+
+
+But we don't need all the movies on this page. We only need the one specific movie. But how do we know which movie we need to load?
+
+We need to use Angular's $routeParams service. Inject in MovieController.
+
+```
+...
+.controller('MoviesController', [
+	"$scope",
+	"$routeParams"
+	"YouTube",
+	function($scope, $routeParams, YouTube) {
+		
+...
+```
+
+Then you can get to URL params like this (console.log routeParams!):
+
+	$routeParams.movie_id; 
+
+The parameter name needs to match the name in the router config.
+
+So the new MovieControlle looks like this:
+
+```
+angular.module('raffler.controllers')
+	.controller('MovieController', [ 
+	"$scope",
+	"$routeParams",
+	"$sce",
+	"YouTube",
+	function($scope, $routeParams, $sce, YouTube) {
+    console.log($routeParams);
+
+		YouTube.getTop25Movies().then(function(result){
+			var movies = result;
+			console.log(result);
+			$scope.movie = _.find(movies, function(v){ 
+				return v.youtubeId == $routeParams.movie_id; 
+			});
+    	
+    	$scope.movie.youtubeUrl = "http://www.youtube.com/embed/" + $scope.movie.youtubeId + "?rel=0"
+  		
+  	});
+
+	}]);
+```
+
+**STOP:** The code is using underscore's find function. You need to install underscore gem and require underscore in `application.js` - run bundle and restart rails.
+
+Now refresh the page. Hmm it isn't loading? Why is that? Let's view dev tools. See the error.
+
+
+```
+Error: [$interpolate:interr] Can't interpolate: {{movie.youtubeUrl}}
+Error: [$sce:insecurl] Blocked loading resource from url not allowed by $sceDelegate policy. 
+```
+
+$sce is a service that provides some security features to AngularJS. SCE stands for Strict Contextual Escaping.
+
+Basically, SCE helps you write code that (a) is secure by default and (b) makes auditing for security vulnerabilities such as XSS, clickjacking, etc. a lot easier.
+
+So what we need to do is to tell angular that we trust this YouTube embed URL as a trusted resource URL. To do that we use the $sce service.
+
+First, we have to inject $sce into our dependencies.
+
+Second, we tell $sce to trust our YouTube URL.
+
+
+```
+$scope.movie.youtubeUrl = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + 
+$scope.movie.youtubeId + "?rel=0"); 
+```
+
