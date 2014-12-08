@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  
-  root to: "raffler#index"
-
   resources :players
+
+  root to: "raffler#index"
+  match '*any' => "raffler#index", :via => [:get, :post]
+
 end
