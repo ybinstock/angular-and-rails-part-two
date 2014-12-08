@@ -1,5 +1,5 @@
 
-##AngularJS and Rails - Part 2
+##AngularJS and Rails - Part 2 - in five steps
 
 ####Goals:
 
@@ -7,10 +7,10 @@
 * Extend Raffler app from last week
 * Refactor app as it grows
 * Add more pages, controllers, factories
-* Understand Angular routing
+* Understand Angular routing and links
 * Integrate external APIs
 
-Quick overview of what we are going to build.
+Let's start with a quick overview of what we are going to build.
 
 ####1) Getting started - same as last time:
 
@@ -23,7 +23,6 @@ Clone [this repo](https://github.com/wdi-sf-fall/angular-and-rails-part-two) and
 	rails s
 
 [open app in browser](http://localhost:3000)
-
 
 ####1) Refactoring
 
@@ -204,7 +203,7 @@ That's better, the real page shows up again. What about '/movies'?
 
 No luck. Our router isn't sticking. Why is that happening?
 
-It's because in our routes we're using HTML5 mode, but when we send a request to /movies Rails is trying to handle a request to that page and it can't find the page.
+It's because in our routes we're using HTML5 mode, but when we send a request to `/movies` Rails is trying to handle a request to that page and it can't find the page.
 
 If we want to use the Angular router, we have to tell Rails to send missing URLs to us. This needs to be the very last route
 
@@ -288,7 +287,7 @@ var promise = $http({
 });
 ```
 
-And the controller resolves the promise:
+And the controller wakes up upon fulfillment of the promise:
 
 ```
 promise.then(function(obj) {
@@ -364,21 +363,23 @@ Catch up:
 		
 ####5) Creating the movie page
 
-Here's a bare bones moviue template:
+Here's a bare bones movie template:
 
-```
-<div class="row">
-    <div class="col-xs-12">
-    <h2>{{movie.title}}</h2> 
-   	<iframe width="853" height="480" ng-src="{{movie.youtubeUrl}}" frameborder="0" allowfullscreen></iframe> 
-    </div>
-  </div>
-```
+
+
+	<div class="row">
+    	<div class="col-xs-12">
+    	<h2>{{movie.title}}</h2> 
+   		<iframe width="853" height="480" ng-src="{{movie.youtubeUrl}}" frameborder="0" 	allowfullscreen></iframe> 
+    	</div>
+	</div>
+
 We are going to shoew the trailer in a an [iframe](https://www.google.com/webhp?sourceid=chrome-instant&ion=1&espv=2&es_th=1&ie=UTF-8#q=what%20is%20an%20iframe)  
   
 Now if we click on a movie we can visit the movie template. It doesn't work! That's because we haven't filled out the controller yet.
 
 First thing we need to do is pull out the list of movies from our movie service, like before.
+
 
 ```
 YouTube.getTop25Movies().then(function(result){
@@ -454,7 +455,9 @@ First, we have to inject $sce into our dependencies.
 
 Second, we tell $sce to trust our YouTube URL.
 
+
 ```
 $scope.movie.youtubeUrl = $sce.trustAsResourceUrl("http://www.youtube.com/embed/" + 
 $scope.movie.youtubeId + "?rel=0"); 
 ```
+
