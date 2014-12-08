@@ -357,7 +357,12 @@ angular.module('raffler.controllers')
 	
 **Exercise:** Repeat over movies and display titles as link to movie page.
 
+Catch up:
+
+	git checkout four
 	
+		
+####5) Calling external APIs - Dynamically Loading Movies
 
 
 
