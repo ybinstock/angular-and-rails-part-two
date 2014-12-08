@@ -210,10 +210,21 @@ If we want to use the Angular router, we have to tell Rails to send missing URLs
 
 	match '*path' => "popcorn#index", :via => [:get, :post]
 
-Try again, now it should work.
+Try again, now it should work. Let's add a link on 
+
+Catch up:
+
+	git checkout two
+
+####4) Wrapping a 3rd party API in a factory
+
+**Exercise:**
+ 
+* Create `MovieController` and `MoviesController` and test with dummy $scope variable in corresponding pages.
+* Create a factory called 'YouTube' that has a function returning the string "Jaws". Use new factory in MoviesController to set your dummy scoped variable to the return value of the function.
+* Add a link to the bottom of the home page that goes to the movies page.  
 
 
-####4) Create a RaffleController
 
 
 ####5) Make raffler app talk to "players api"

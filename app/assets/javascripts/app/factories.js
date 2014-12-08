@@ -24,3 +24,11 @@ angular.module('raffler.factories')
 		return resource;
 });
 
+angular.module('raffler.factories')
+	.factory('YouTube', function ($http, $q) {
+		var api = {};
+		api.dummyMovie = function (){
+			return "Jaws";
+		}
+		return api;
+});
