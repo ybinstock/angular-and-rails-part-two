@@ -1,16 +1,16 @@
-app.controller('RaffleController', [ 
+angular.module ('raffler.controllers').controller('RaffleController', [
 	"$scope",
 	"Player",
 	function($scope, Player) {
 
 		Player.query().then(function(result) {
 			$scope.players = result;
-		})
-		
+		});
+
 		$scope.addPlayer = function() {
 			var newPlayer = new Player({
 				name: $scope.newName
-			})
+			});
 			newPlayer.create().then(function(newlyCreatedPlayer){
 				$scope.players.push(newlyCreatedPlayer);
 				$scope.newName = "";
